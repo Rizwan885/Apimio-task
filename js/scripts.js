@@ -1,94 +1,16 @@
-// $(document).ready(function () {
-//   const api_url = 'https://dummyjson.com/products';
-//   const resultsPerPage = 8;
-//   let currentPage = 1;
-//   let totalProducts = 0;
-//   let productData = [];
-
-//   async function getapi(url) {
-//     try {
-//       // Storing response
-//       const response = await fetch(url);
-
-//       // Storing data in the form of JSON
-//       const data = await response.json();
-//       productData = data.products;
-//       totalProducts = data.total;
-//       displayProductResults();
-//     } catch (error) {
-//       console.error('An error occurred while fetching product data:', error);
-//     }
-//   }
-
-//   // Calling the async function
-//   getapi(api_url);
-
-//   function displayProductResults() {
-//     $('#productResults').empty();
-
-//     const startIndex = (currentPage - 1) * resultsPerPage;
-//     const endIndex = Math.min(startIndex + resultsPerPage, totalProducts);
-
-//     for (let i = startIndex; i < endIndex; i++) {
-//       const product = productData[i];
-//       const productElement = `
-//         <div class="grid-item">
-//           <h1>${product.title}</h1>
-//           <img src="${product.thumbnail}" alt="${product.title}" />
-//           <p>${product.description}</p>
-//           <p>Price: $${product.price}</p>
-//           <p>Rating: ${product.rating}</p>
-//         </div>
-//       `;
-//       $('#productResults').append(productElement);
-//     }
-
-//     // Show or hide "Load More" button based on the number of results displayed
-//     if (endIndex < totalProducts) {
-//       $('#loadMoreBtn').show();
-//     } else {
-//       $('#loadMoreBtn').hide();
-//     }
-//   }
-
-//   $('#loadMoreBtn').click(function () {
-//     currentPage++; // Increment current page on "Load More" button click
-//     displayProductResults();
-//   });
-
-//   // Implement the search functionality
-//   $('#searchForm').submit(function (event) {
-//     event.preventDefault();
-//     const searchTerm = $('#searchInput').val().toLowerCase();
-
-//     // Filter the products based on the search term
-//     const filteredProducts = productData.filter(
-//       (product) =>
-//         product.title.toLowerCase().includes(searchTerm) ||
-//         product.description.toLowerCase().includes(searchTerm)
-//     );
-
-//     // Update the totalProducts count and reset the currentPage
-//     totalProducts = filteredProducts.length;
-//     currentPage = 1;
-
-//     // Display the filtered results
-//     displayProductResults();
-//   });
-// });
-
 $(document).ready(function () {
-  const api_url = 'https://dummyjson.com/products';
+  // According to api endpoint it fetchs single movie on searching title
+  const initial_api_url = 'http://www.omdbapi.com/?t=A&apikey=83bdc4d8'; // Initial endpoint with title A
+  const search_api_url = 'http://www.omdbapi.com/?apikey=83bdc4d8';
   const resultsPerPage = 8;
   let currentPage = 1;
   let totalProducts = 0;
-  let productData = [];
+  let productData = []; // Handles movie product information
 
   async function getapi(url) {
     try {
       // Storing response
       const response = await fetch(url);
-
       // Check if the response is successful
       if (!response.ok) {
         throw new Error('Failed to fetch product data');
@@ -96,6 +18,7 @@ $(document).ready(function () {
 
       // Storing data in the form of JSON
       const data = await response.json();
+      console.log(data);
       productData = data.products;
       totalProducts = data.total;
       displayProductResults();
@@ -106,8 +29,8 @@ $(document).ready(function () {
     }
   }
 
-  // Calling the async function
-  getapi(api_url);
+  // Calling the initial API function
+  getapi(initial_api_url);
 
   function displayProductResults() {
     $('#productResults').empty();
@@ -122,14 +45,15 @@ $(document).ready(function () {
       for (let i = startIndex; i < endIndex; i++) {
         const product = productData[i];
         const productElement = `
-              <div class="grid-item">
-                <h1>${product.title}</h1>
-                <img src="${product.thumbnail}" alt="${product.title}" />
-                <p>${product.description}</p>
-                <p>Price: $${product.price}</p>
-                <p>Rating: ${product.rating}</p>
-              </div>
-            `;
+          <div class="grid-item">
+            <h1>${product.Title}</h1>
+            <img src="${product.Poster}" alt="${product.Title}" />
+            <p>${product.Plot}</p>
+            <p>Runtime: ${product.Runtime}</p>
+            <p>Rating: ${product.imdbRating}</p>
+          </div>
+        
+        `;
         $('#productResults').append(productElement);
       }
 
@@ -148,22 +72,38 @@ $(document).ready(function () {
   });
 
   // Implement the search functionality
-  $('#searchForm').submit(function (event) {
+  $('#searchForm').submit(async function (event) {
     event.preventDefault();
     const searchTerm = $('#searchInput').val().toLowerCase();
+    const searchUrl = `${search_api_url}&t=${searchTerm}`;
 
-    // Filter the products based on the search term
-    productData = productData.filter(
-      (product) =>
-        product.title.toLowerCase().includes(searchTerm) ||
-        product.description.toLowerCase().includes(searchTerm)
-    );
+    try {
+      // Storing response
+      const response = await fetch(searchUrl);
 
-    // Update the totalProducts count and reset the currentPage
-    totalProducts = productData.length;
-    currentPage = 1;
+      // Check if the response is successful
+      if (!response.ok) {
+        throw new Error('Failed to fetch search results');
+      }
 
-    // Display the filtered results or show "No records found" message
-    displayProductResults();
+      // Storing data in the form of JSON
+      const data = await response.json();
+      if (data.Response === 'True') {
+        productData = [data];
+        totalProducts = 1;
+        currentPage = 1;
+      } else {
+        productData = [];
+        totalProducts = 0;
+        currentPage = 1;
+      }
+
+      // Display the search results or show "No records found" message
+      displayProductResults();
+    } catch (error) {
+      console.error('An error occurred while fetching search results:', error);
+      // Show "No records found" message if the search query returns no results
+      $('#productResults').html('<p>No records found</p>');
+    }
   });
 });
