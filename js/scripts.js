@@ -44,6 +44,8 @@ $(document).ready(function () {
     } else {
       for (let i = startIndex; i < endIndex; i++) {
         const product = productData[i];
+      ;
+        var searchquery=`Search "${product.Title}"`;
         const productElement = `
           <div class="grid-item">
             <h1>${product.Title}</h1>
@@ -55,6 +57,7 @@ $(document).ready(function () {
         
         `;
         $('#productResults').append(productElement);
+        $('#title').append(searchquery);
       }
 
       // Show or hide "Load More" button based on the number of results displayed

@@ -1,64 +1,95 @@
-/* CSS for movie search results */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
+body{
+  margin:0;
+  padding:0;
+}
+/* styles.scss */
+
+// Custom styles for the navigation bar
+.container-fluid{
+  padding: 0px 0;
+  
+
+}
+.navbar{
+  padding:3px 15px;
+ 
+}
+.navbar-brand {
+  img {
+    max-height: 40px; // Adjust this as needed
+  }
 }
 
-header {
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
+.nav-item {
+  margin-right: 15px;
+}
+.nav-link{
+  color:#fff;
+  font-weight: bolder;
 }
 
-h1 {
-  margin: 0;
-}
 
-form {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-#searchInput {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px 0 0 5px;
-}
-
-#searchButton {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
+// Custom styles for the dropdown menu
+.dropdown-menu {
+  background-color: #000; // Background color for the dropdown menu
   border: none;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
+
+  .dropdown-item {
+    color: #fff;
+    &:hover {
+      background-color: #333; // Background color on hover
+    }
+  }
+}
+#toggleBtn{
+  background-color:#000;
+  border: none;
+}
+#toggleBtn span{
+  color: #fff;
+}
+.search-div{
+  width: 50%;
+  position: relative;
 }
 
-#searchButton:hover {
-  background-color: #0056b3;
+#searchButton{
+  position: absolute;
+  right:0%;
+
+}
+#search::placeholder {
+   text-indent: 50px;
+}
+#imdPro{
+  width: 60px;
+  height:50px
 }
 
-main {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  padding: 20px;
+#all span{
+  color: #000;
 }
-
+#all{
+  border-radius: 0px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  
+}
+.form-control{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
 .grid-item {
-  box-shadow: 1px 1px 20px -6px black;
+  
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
+ 
 }
 
 img {
   max-width: 100%;
-  height: auto;
+  height: 150px;
   border-radius: 5px;
 }
 
@@ -77,22 +108,22 @@ img {
   background-color: #0056b3;
 }
 
-#productResults p,
-#movieResults p {
+#productResults p{
   margin: 5px 0;
 }
 
-#productResults h1,
-#movieResults h1 {
+#productResults h1 {
   margin-top: 0;
 }
 
-#productResults p:first-child,
-#movieResults p:first-child {
+#productResults p:first-child {
   font-weight: bold;
 }
-
-p {
-  color: #333;
-  font-weight: bolder;
+main {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(300px, 1fr))[auto-fit];
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
